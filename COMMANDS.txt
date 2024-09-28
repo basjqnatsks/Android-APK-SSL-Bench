@@ -1,0 +1,26 @@
+apktool.jar d b2.apk
+pause
+
+apktool b output-folder -o recompiled-app.apk
+
+apktool d your-app.apk -o output-folder
+
+
+adb logcat | grep <your_app_package_name>
+
+apksigner verify --verbose <your_apk>
+
+Get-ChildItem "signed_*" | Rename-Item -NewName { $_.Name -replace '^signed_','' }
+
+for %f in (*.apk) do apksigner sign --ks C:\path\to\your_keystore.jks --ks-key-alias your_key_alias --ks-pass pass:your_keystore_password --key-pass pass:your_key_password --out signed_%~nf.apk %f
+
+
+zipalign -v 4 signed-app.apk aligned-app.apk
+
+
+apksigner sign --ks my-release-key.keystore --ks-key-alias alias_name --out signed-app.apk recompiled-app.apk
+
+
+
+
+keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
